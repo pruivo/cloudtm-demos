@@ -18,6 +18,7 @@
         <version.maven-antrun-plugin>1.7</version.maven-antrun-plugin>
         <version.maven-assembly-plugin>2.4</version.maven-assembly-plugin>
         <version.maven-build-helper-plugin>1.7</version.maven-build-helper-plugin>
+        <version.maven-clean-plugin>2.5</version.maven-clean-plugin>
         <version.maven-compiler-plugin>3.0</version.maven-compiler-plugin>
         <version.maven-dependency-plugin>2.6</version.maven-dependency-plugin>
         <version.maven-jar-plugin>2.4</version.maven-jar-plugin>
@@ -160,6 +161,30 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${version.maven-clean-plugin}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/resources/</directory>
+                            <includes>
+                                <include>infinispan.xml</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>PutObjectStoreDirHere</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>ObjectStore</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
 
         </plugins>
