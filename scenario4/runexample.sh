@@ -21,18 +21,19 @@ while [ -n "$1" ]; do
   case $1 in
     -infinispan) BACKEND=pt.ist.fenixframework.backend.infinispan.InfinispanCodeGenerator; shift 1;;
     -ogm) BACKEND=pt.ist.fenixframework.backend.ogm.OgmCodeGenerator; shift 1;;
-    -repl|-dist) ISPN_CONFIG=${WORKING_DIR}/src/main/resources/ispn${1}.xml; shift 1;;
+    -repl|-dist) ISPN_CONFIG=${WORKING_DIR}/target/classes/ispn${1}.xml; shift 1;;
     -h|-help) help_and_exit;;
     *) ARGS="${ARGS} $1" ; shift 1;;
   esac
 done
 
-ln -sf ${ISPN_CONFIG} ${WORKING_DIR}/src/main/resources/infinispan.xml
-rm -r /tmp/lucenedirs /tmp/fs-store 2>/dev/null
+rm -r /tmp/fs-store 2>/dev/null
 
 cd ${WORKING_DIR}
 #Compile
 mvn clean package -DskipTests -Dfenixframework.code.generator=$BACKEND
+
+cp ${ISPN_CONFIG} ${WORKING_DIR}/target/classes/infinispan.xml
 
 #start gossip router
 mvn exec:java -DskipTests -Dexec.mainClass="org.jgroups.stack.GossipRouter" &
