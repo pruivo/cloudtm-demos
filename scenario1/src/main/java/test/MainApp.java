@@ -16,7 +16,7 @@ public class MainApp {
 
     public static final int AUTH_COUNT = 1000;
     public static final int PUB_COUNT = 50;
-    public static final int BOOK_COUNT = AUTH_COUNT * 10;
+    public static final int BOOK_COUNT = 1000;
 
     public static void main(String[] args) {
         try {
