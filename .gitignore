@@ -9,3 +9,5 @@ ObjectStore/
 PutObjectStoreDirHere
 ### remote link to infinispan config
 scenario3/src/main/resources/infinispan.xml
+scenario4/src/main/resources/infinispan.xml
+
