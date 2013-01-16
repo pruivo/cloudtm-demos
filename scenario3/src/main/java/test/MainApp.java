@@ -29,18 +29,11 @@ public class MainApp {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            error("Expected an arguments [-node1 or -node2]");
+            error("Expected an arguments");
             System.exit(1);
         }
 
-        if ("-node1".equals(args[0])) {
-            nodeName = "node_a";
-        } else  if ("-node2".equals(args[0])) {
-            nodeName = "node_b";
-        } else {
-            error("Expected one of the arguments [-node1 or -node2] and not [" + args[0] + "]");
-            System.exit(1);
-        }
+        nodeName = args[0];
 
         try {
             initDomain();
