@@ -3,7 +3,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/JGroups-3.3.xsd">
     <TCP
-            bind_addr="127.0.0.1"
             bind_port="7800"
             recv_buf_size="${tcp.recv_buf_size:20M}"
             send_buf_size="${tcp.send_buf_size:640K}"
@@ -30,10 +29,8 @@
             oob_thread_pool.queue_max_size="1000"
             oob_thread_pool.rejection_policy="discard"
             />
-    <TCPPING
-            initial_hosts="127.0.0.1[7800]"
-            port_range="10"
-            max_dynamic_hosts="2"
+    <TCPGOSSIP
+            initial_hosts="${jgroups.bind_addr}[12001]"
             num_initial_members="1"
             break_on_coord_rsp="true"
             stagger_timeout="350"

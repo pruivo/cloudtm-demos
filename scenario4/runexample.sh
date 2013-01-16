@@ -4,6 +4,7 @@ WORKING_DIR=`cd $(dirname $0); pwd`
 
 BACKEND=pt.ist.fenixframework.backend.infinispan.InfinispanCodeGenerator
 ISPN_CONFIG=${WORKING_DIR}/src/main/resources/ispn-repl.xml
+HOSTNAME=`hostname -s`
 
 help_and_exit() {
   echo "usage: $0 [-infinispan] [-ogm] [-repl] [-dist] [-h|-help] [maven opts]"
@@ -30,11 +31,22 @@ ln -sf ${ISPN_CONFIG} ${WORKING_DIR}/src/main/resources/infinispan.xml
 rm -r /tmp/lucenedirs /tmp/fs-store 2>/dev/null
 
 cd ${WORKING_DIR}
-mvn clean package -DskipTests
-#start node A
-MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Dfenix-framework-hibernate-search-config-file=fenix-framework-hibernate-search-master.properties" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="-node1" $ARGS &
-PID=$!
+#Compile
+mvn clean package -DskipTests -Dfenixframework.code.generator=$BACKEND
+
+#start gossip router
+mvn exec:java -DskipTests -Dexec.mainClass="org.jgroups.stack.GossipRouter" &
+GOSSIP_ROUTER_PID=$!
 sleep 10
-MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Dfenix-framework-hibernate-search-config-file=fenix-framework-hibernate-search-slave.properties" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="-node2" $ARGS
+
+#start node A
+MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_a" $ARGS &
+PID=$!
+sleep 5
+
+#start node B
+MAVEN_OPTS="-Xmx1G -Djava.net.preferIPv4Stack=true -Djgroups.bind_addr=${HOSTNAME}" mvn exec:java -Dfenixframework.code.generator=$BACKEND -DskipTests -Dexec.mainClass="test.MainApp" -Dexec.args="node_b" $ARGS
 wait $PID
+#kill Gossip Router
+kill ${GOSSIP_ROUTER_PID}
 exit 0
