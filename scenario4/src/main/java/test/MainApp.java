@@ -28,14 +28,16 @@ public class MainApp {
     private static String nodeName;
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            error("Expected an arguments");
+        if (args.length < 2) {
+            error("Expected two arguments: <hostname> and <number of nodes expected>");
             System.exit(1);
         }
 
         nodeName = args[0];
+        int expectedNodes = Integer.parseInt(args[1]);
 
         try {
+            awaitUntilClusterFormed(expectedNodes);
             initDomain();
             sleepAWhile();
             doQueries();
@@ -43,6 +45,8 @@ public class MainApp {
             sleepAWhile();
             doMoreQueries();
             sleepAWhile();
+        } catch (InterruptedException e) {
+            logger.error("Interrupted!");
         } finally {
             FenixFramework.shutdown();
         }
@@ -93,6 +97,34 @@ public class MainApp {
 
             domainRoot.addTheBooks(book);
         }
+    }
+
+    public static void awaitUntilClusterFormed(int expectedSize) throws InterruptedException {
+        Machine thisMachine = createMachineId();
+        logger.info("Waiting until the cluster has " + expectedSize + " nodes");
+        while (!assertNumberOfNodes(expectedSize, thisMachine)) {
+            Thread.sleep(1000);
+        }
+        logger.info(expectedSize + " has joined the cluster. moving on");
+    }
+
+    @Atomic
+    public static Machine createMachineId() {
+        DomainRoot domainRoot = FenixFramework.getDomainRoot();
+        Machine machine = new Machine(nodeName);
+        domainRoot.addTheMachines(machine);
+        return machine;
+    }
+
+    @Atomic
+    public static boolean assertNumberOfNodes(int expected, Machine thisMachine) {
+        DomainRoot domainRoot = FenixFramework.getDomainRoot();
+        domainRoot.addTheMachines(thisMachine);
+        Set<Machine> machineSet = domainRoot.getTheMachines();
+        int size = machineSet.size();
+        logger.trace("Check number of nodes in the cluster: " + size + " (expected: " + expected + ")");
+        logger.trace("Hostnames are: " + machineSet);
+        return size >= expected;
     }
 
     public static void initDomain() {

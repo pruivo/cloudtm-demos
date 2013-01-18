@@ -23,6 +23,10 @@ class ScifiBook extends Book {
 	boolean dystopianSociety;
 }
 
+class Machine {
+    String hostname;
+}
+
 relation PublisherWithBooks {
     Publisher playsRole publisher;
     Book playsRole booksPublished {
@@ -61,6 +65,13 @@ relation DRWithAuthors {
 relation DRWithPublishers {
     .pt.ist.fenixframework.DomainRoot playsRole parent;
     Publisher playsRole thePublishers {
+        multiplicity *;
+    }
+}
+
+relation DRWithMachines {
+    .pt.ist.fenixframework.DomainRoot playsRole parent;
+    Machine playsRole theMachines {
         multiplicity *;
     }
 }
