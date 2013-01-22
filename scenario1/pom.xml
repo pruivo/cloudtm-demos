@@ -13,7 +13,7 @@
         <fenixframework.code.generator>pt.ist.fenixframework.backend.infinispan.InfinispanCodeGenerator</fenixframework.code.generator>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.fenix.framework>2.0-cloudtm</version.fenix.framework>
+        <version.fenix.framework>2.1-cloudtm-SNAPSHOT</version.fenix.framework>
         <version.maven-antrun-plugin>1.7</version.maven-antrun-plugin>
         <version.maven-assembly-plugin>2.4</version.maven-assembly-plugin>
         <version.maven-build-helper-plugin>1.7</version.maven-build-helper-plugin>

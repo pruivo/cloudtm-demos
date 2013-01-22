@@ -27,6 +27,7 @@ while [ -n "$1" ]; do
   esac
 done
 
+mkdir -p /tmp/fs-store 2>/dev/null
 rm -r /tmp/fs-store 2>/dev/null
 
 cd ${WORKING_DIR}
