@@ -20,9 +20,9 @@
     </global>
     <default>
         <locking
-                isolationLevel="REPEATABLE_READ"
+                isolationLevel="SERIALIZABLE"
                 concurrencyLevel="32"
-                writeSkewCheck="true"
+                writeSkewCheck="false"
                 useLockStriping="false"
                 lockAcquisitionTimeout="5000"/>
         <jmxStatistics
@@ -43,13 +43,13 @@
                 autoCommit="true"/>
         <versioning
                 enabled="true"
-                versioningScheme="SIMPLE"/>
+                versioningScheme="GMU"/>
         <clustering mode="r">
             <sync
                     replTimeout="15000"
                     />
             <stateTransfer
-                    fetchInMemoryState="true"
+                    fetchInMemoryState="false"
                     />
         </clustering>
     </default>

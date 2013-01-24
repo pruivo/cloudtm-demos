@@ -225,6 +225,11 @@
             <artifactId>hibernate-search-infinispan</artifactId>
             <version>${version.hibernate.search.infinspan}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+            <version>3.3.0-cloudtm-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <repositories>

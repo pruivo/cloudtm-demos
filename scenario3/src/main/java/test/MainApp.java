@@ -1,20 +1,19 @@
 package test;
 
-import java.util.*;
-
-import pt.ist.fenixframework.Atomic;
-import pt.ist.fenixframework.DomainRoot;
-
-import pt.ist.fenixframework.FenixFramework;
-import pt.ist.fenixframework.hibernatesearch.HibernateSearchSupport;
-
 import org.apache.lucene.search.Query;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.engine.spi.EntityInfo;
 import org.hibernate.search.query.engine.spi.HSQuery;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.ist.fenixframework.Atomic;
+import pt.ist.fenixframework.DomainRoot;
+import pt.ist.fenixframework.FenixFramework;
+import pt.ist.fenixframework.hibernatesearch.HibernateSearchSupport;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class MainApp {
 
@@ -37,16 +36,17 @@ public class MainApp {
         int expectedNodes = Integer.parseInt(args[1]);
 
         try {
-            awaitUntilClusterFormed(expectedNodes);
             initDomain();
             sleepAWhile();
             doQueries();
             modifyDomain();
             sleepAWhile();
             doMoreQueries();
-            sleepAWhile();
+            FenixFramework.barrier("finish", expectedNodes);
         } catch (InterruptedException e) {
             logger.error("Interrupted!");
+        } catch (Exception e) {
+            logger.error("Error", e);
         } finally {
             FenixFramework.shutdown();
         }
@@ -97,34 +97,6 @@ public class MainApp {
 
             domainRoot.addTheBooks(book);
         }
-    }
-
-    public static void awaitUntilClusterFormed(int expectedSize) throws InterruptedException {
-        Machine thisMachine = createMachineId();
-        logger.info("Waiting until the cluster has " + expectedSize + " nodes");
-        while (!assertNumberOfNodes(expectedSize, thisMachine)) {
-            Thread.sleep(1000);
-        }
-        logger.info(expectedSize + " has joined the cluster. moving on");
-    }
-
-    @Atomic
-    public static Machine createMachineId() {
-        DomainRoot domainRoot = FenixFramework.getDomainRoot();
-        Machine machine = new Machine(nodeName);
-        domainRoot.addTheMachines(machine);
-        return machine;
-    }
-
-    @Atomic
-    public static boolean assertNumberOfNodes(int expected, Machine thisMachine) {
-        DomainRoot domainRoot = FenixFramework.getDomainRoot();
-        domainRoot.addTheMachines(thisMachine);
-        Set<Machine> machineSet = domainRoot.getTheMachines();
-        int size = machineSet.size();
-        logger.trace("Check number of nodes in the cluster: " + size + " (expected: " + expected + ")");
-        logger.trace("Hostnames are: " + machineSet);
-        return size >= expected;
     }
 
     public static void initDomain() {
