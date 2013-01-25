@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<infinispan
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd"
-        xmlns="urn:infinispan:config:5.2">
+<infinispan xmlns="urn:infinispan:config:5.2">
     <global>
         <globalJmxStatistics
                 enabled="false"
@@ -20,9 +17,9 @@
     </global>
     <default>
         <locking
-                isolationLevel="REPEATABLE_READ"
+                isolationLevel="SERIALIZABLE"
                 concurrencyLevel="32"
-                writeSkewCheck="true"
+                writeSkewCheck="false"
                 useLockStriping="false"
                 lockAcquisitionTimeout="5000"/>
         <jmxStatistics
@@ -43,7 +40,7 @@
                 autoCommit="true"/>
         <versioning
                 enabled="true"
-                versioningScheme="SIMPLE"/>
+                versioningScheme="GMU"/>
         <clustering mode="d">
             <sync
                     replTimeout="15000"
@@ -53,12 +50,12 @@
                     numOwners="1"
                     />
             <stateTransfer
-                    fetchInMemoryState="true"
+                    fetchInMemoryState="false"
                     />
         </clustering>
         <loaders passivation="false" shared="true" preload="false">
             <loader class="org.infinispan.loaders.file.FileCacheStore"
-                    fetchPersistentState="true"
+                    fetchPersistentState="false"
                     purgerThreads="3"
                     purgeSynchronously="true"
                     ignoreModifications="false"

@@ -15,6 +15,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <version.fenix.framework>2.1-cloudtm-SNAPSHOT</version.fenix.framework>
         <version.hibernate.search.infinspan>4.2.0.Beta2</version.hibernate.search.infinspan>
+        <version.infinispan>5.2.0-cloudtm-SNAPSHOT</version.infinispan>
+        <version.jgroups>3.3.0-cloudtm-SNAPSHOT</version.jgroups>
         <version.maven-antrun-plugin>1.7</version.maven-antrun-plugin>
         <version.maven-assembly-plugin>2.4</version.maven-assembly-plugin>
         <version.maven-build-helper-plugin>1.7</version.maven-build-helper-plugin>
@@ -225,10 +227,18 @@
             <artifactId>hibernate-search-infinispan</artifactId>
             <version>${version.hibernate.search.infinspan}</version>
         </dependency>
+
+        <!-- force this dependencies version -->
         <dependency>
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
-            <version>3.3.0-cloudtm-SNAPSHOT</version>
+            <version>${version.jgroups}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-lucene-directory</artifactId>
+            <version>${version.infinispan}</version>
         </dependency>
     </dependencies>
 
